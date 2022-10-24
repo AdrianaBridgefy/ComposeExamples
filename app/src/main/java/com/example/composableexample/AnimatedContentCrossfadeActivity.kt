@@ -3,22 +3,15 @@ package com.example.composableexample
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +21,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -91,7 +85,26 @@ fun AnimatedContentUi() {
                     )
                 }
 
-                AnimatedContent(targetState = count) {
+                AnimatedContent(
+                    targetState = count,
+                    transitionSpec = {
+                        if (targetState > initialState) {
+                            slideInHorizontally { width -> -width } + fadeIn() with slideOutHorizontally { width -> width } + fadeOut() using
+                                SizeTransform { initialSize, targetSize ->
+                                    keyframes {
+                                        IntSize(
+                                            initialSize.width / 2,
+                                            targetSize.height / 2
+                                        )
+                                    }
+                                }
+                        } else {
+                            slideInHorizontally { width -> -width } + fadeIn() with slideOutHorizontally { width ->
+                                -width
+                            } + fadeOut()
+                        }
+                    }
+                ) {
                     Box(
                         modifier = Modifier
                             .weight(1f)
@@ -147,7 +160,21 @@ fun AnimatedContentUi() {
             Divider()
             AnimatedContent(
                 targetState = expand,
-                modifier = Modifier.padding(0.dp, 10.dp)
+                transitionSpec = {
+                    slideIntoContainer(
+                        towards = AnimatedContentScope.SlideDirection.Up,
+                        animationSpec =
+                        spring(Spring.DampingRatioHighBouncy)
+                    ) + fadeIn() with slideOutOfContainer(
+                        AnimatedContentScope.SlideDirection.Up
+                    ) + fadeOut() using
+                        SizeTransform { initialSize, targetSize ->
+                            keyframes {
+                                durationMillis = 300
+                                IntSize(initialSize.width / 2, targetSize.height / 2) at 150
+                            }
+                        }
+                }
             ) {
                 Box(
                     modifier = Modifier
