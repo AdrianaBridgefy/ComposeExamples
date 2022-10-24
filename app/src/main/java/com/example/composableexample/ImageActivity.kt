@@ -40,6 +40,7 @@ fun ComposeImages() {
         Image(
             painter = painterResource(id = R.drawable.my_pug),
             contentDescription = "pug",
+
             modifier = Modifier.fillMaxWidth().height(380.dp).clip(CircleShape),
             contentScale = ContentScale.Crop
         )
