@@ -204,6 +204,7 @@ fun AnimatedContentUi() {
             }
         }
 
+
         Column(
             modifier = Modifier
                 .fillMaxHeight()
@@ -215,6 +216,7 @@ fun AnimatedContentUi() {
                 style = MaterialTheme.typography.h6,
                 modifier = Modifier.padding(16.dp)
             )
+
             Divider()
 
             val targetState = pick
