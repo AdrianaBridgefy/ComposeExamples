@@ -204,6 +204,7 @@ fun AnimatedContentUi() {
             }
         }
 
+
         Column(
             modifier = Modifier
                 .fillMaxHeight()
